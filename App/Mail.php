@@ -41,8 +41,6 @@ class Mail
 
 		if(!$mail->Send()) {
 		echo "Błąd wysyłania e-maila: " . $mail->ErrorInfo;
-		} else {
-			echo "Wiadomość została wysłana!";
-			}		
+		}	
 	}
 }
