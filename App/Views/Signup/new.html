@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block footer %}
+	
+	<script src="/js/hideShowPassword.min.js"></script>
+	
+	<script>
+		$(document).ready(function(){
+		
+			jQuery.validator.addMethod('validPassword', function(value, element) {
+					if (value != '') {
+						if (value.match(/.*[a-z]+.*/i) == null) { 
+							return false;
+						}
+						if (value.match(/.*\d+.*/i) == null) {
+							return false;
+						}
+					}
+
+					return true;
+				},
+			);
+			
+			$('#formSignup').validate({
+					rules: {
+					    name: {
+							required: true
+						},
+						email: {
+							required: true,
+							email: true,
+							remote: '/account/validate-email'
+						},
+						password: {
+							required: true,
+							minlength: 7,
+							maxlength: 25, 
+							validPassword: true
+						},
+					},
+					messages: {
+					    name: {
+							required: "<div style ='color: red; font-size: 14px; text-align: center;'>name field is required </div>"
+						},
+						email: {
+							required: "<div style ='color: red; font-size: 14px; margin: 5px; text-align: center;'>email field is required </div>",
+							email: "<div style ='color: red; font-size: 14px; text-align: center;'>enter valid email address </div>",
+							remote: "<div style ='color: red; font-size: 15px; text-align: center;'>email address already taken </div>"
+						},
+						password: {
+							required: "<div style ='color: red; font-size: 15px; margin: 5px; text-align: center;'>password field is required </div>",
+							minlength: "<div style ='color: red; font-size: 15px; margin: 5px; text-align: center;'>password must contain 7 to 25 characters </div>",
+							maxlength: "<div style ='color: red; font-size: 15px; margin: 5px; text-align: center;'>password must contain 7 to 25 characters </div>",
+							validPassword: "<div style ='color: red; font-size: 15px; margin: 5px; text-align: center;'>must contain 1 letter and 1 number</div>"
+						},
+					}
+				});
+			/**
+			 * Show password toggle button
+			 *
+			 */
+			$('#inputPassword').hideShowPassword({
+				show: false,
+				innerToggle: 'focus',
+				toggle: {
+						verticalAlign: 'top',
+						styles: { 'margin-top': '10px' , 'border': '1px solid #00aaa2', 'border-radius': '10px', 'margin-right': '5px'}
+				}
+			});
+			 
+		});
+	</script>
+	
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="row">
+					
+		<div class="col-md-12">
+				
+				
+					
+					
+	
+				<form method="post" action="/signup/create" id="formSignup">
+				
+				{% if user.errors is not empty %}
+					<p>Errors:</p>
+						<ul>
+							{% for error in user.errors %}
+								<li> {{ error }}</li>
+							{% endfor %}
+						</ul>
+					{% endif %}
+				
+				{% for message in flash_messages %}
+					<div style ="color: red; font-size: 15px; {{ message.type }}">
+						{{ message.body }}
+					</div>
+				{% endfor %}
+					
+					<input type="text" id="inputName" name="name" placeholder="&#xe800;   Name" style="font-family: 'lock';" onfocus="this.placeholder=''" onblur="this.placeholder='&#xe800;   Name'" value="{{ user.name }}" required />
+					
+					<input type="email" id="inputEmail" name="email" placeholder="&#xe803;   Email address" style="font-family: 'lock';" onfocus="this.placeholder=''" onblur="this.placeholder='&#xe803;   Email address'" value="{{ user.email }}" required />
+					
+					<input type="password" id="inputPassword" name="password" placeholder= "&#xe804;   Password" style="font-family: 'lock';" onfocus="this.placeholder=''" onblur="this.placeholder='&#xe804;   Password'" required />
+					
+					<!-- password 2 placeholder
+					<input type="password" name="password_2"placeholder= "&#xe804;   Confirm password" style="font-family: 'lock';" onfocus="this.placeholder=''" onblur="this.placeholder='&#xe804;   Confirm password'" >
+					-->
+					
+					<input type="submit" value="Sign-up">
+					
+					<!-- pattern ="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" title ="Minimum 6 chars, at least one letter and number."   
+					     validation of password pattern:at least 1 number, at least 1 letter and a minimum of 6 characters --> 
+					
+					
+					<!-- removing password confirmation field and replace with a show password option in the password input field	
+							
+					<div>
+						<label for="inputPasswordConfirmation">Repeat password</label>
+						<input type="password" id="inputPasswordConfirmation" name="password_confirmation" placeholder="Repeat password" required />
+					</div>
+					-->
+				</form>
+				
+				<footer>
+					<div id="back_to_home_page"><a href ='/home/index'; style="color: #000;"> Back to home page </a></div>	
+				</footer>
+		</div>
+						
+	</div>	
+	
+	
+{% endblock %}

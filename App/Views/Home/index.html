@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<form method="post" action="/login/create">
+			
+			{% for message in flash_messages %}
+				<div style ="color: red; font-size: 15px; {{ message.type }}">
+				{{ message.body }}
+				</div>
+			{% endfor %}
+			
+				<input type="email" name = "email" placeholder="&#xe803;  Email address" style="font-family: 'lock';" onfocus="this.placeholder=''" onblur="this.placeholder='&#xe803;   Email address'">
+				<input type="password" name = "password" placeholder= "&#xe804;  Password" style="font-family: 'lock';" onfocus="this.placeholder=''" onblur="this.placeholder='&#xe804;   Password'" > 
+				
+				<div id="forgot"><a href="/password/forgot">Forgot password ?</a></div>
+				<input type="submit" value="Sign-in">
+				<div id="remember"><input type="checkbox" name="remember_me" {% if remember_me %} checked="checked" {% endif %}/> Remember me</div>
+				
+			</form>
+			<footer>
+				<div id="account_check"> Don't have an account? </div>
+				<div id="sign_up"><a href="/signup/new"> Sign-up </a></div>
+			</footer>
+		</div>
+	</div>
+	
+{% endblock %}
+
+

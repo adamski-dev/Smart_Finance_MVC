@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Balance{% endblock %}
+{% block footer %}
+
+	<script>
+	// Data Picker Initialization
+	$('.datepicker').pickadate();
+	</script>
+
+{% endblock %}
+
+{% block body_user_signed_in %}
+
+	<main>
+		<section>
+			<div class="container">
+				<div class="raw">
+					<form>
+						<div class="balance_container">
+							<h4 style="margin-bottom: 30px; border-bottom-color: #17a2b8; padding: 5px 0;">Balance summary</h4>
+							
+							<!-- Button trigger modal_1 -->
+							<button type="button" class="btn btn-info mb-2" data-toggle="modal" data-target="#dates_selection">
+							Select date range for summary
+							</button>
+							<div class="incomes_balance">
+								<h3>Incomes</h3>
+									<div id="incomes_column1">
+										<div class="first_line bg-info"> Category </div>
+										<div class="last_line bg-info"> Total </div>
+									</div>
+									<div id="incomes_column2">
+										<div class="first_line bg-info"> Amount </div>
+										<div class="last_line bg-info">{{0}}</div>
+									</div>		
+							</div>
+							<div class="expenses_balance">
+								<h3>Expenses</h3>
+									<div id="expenses_column1">
+										<div class="first_line bg-info"> Category </div>
+										<div class="last_line bg-info"> Total </div>
+									</div>
+									<div id="expenses_column2">
+										<div class="first_line bg-info"> Amount </div>
+										<div class="last_line bg-info">{{0}}</div>
+									</div>		
+							</div>
+						</div>	
+					</form>
+				</div>
+			</div>
+		</section>
+		
+		<!-- Modal_1 -->
+		<div class="modal fade" id="dates_selection" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<form method="post" action="/balance/display" id="balance_modal_form">
+						<div class="date_selector"><button type="submit" name="this_month" class="btn btn-info">This month</button></div>
+						<div class="date_selector"><button type="submit" name="last_month" class="btn btn-info">Last month</button></div>
+						<div class="date_selector"><button type="submit" name="this year" class="btn btn-info">This year</button></div>
+						<div class="date_selector"><button type="submit" name="last_year" class="btn btn-info">Last year</button></div>
+						
+						<!-- Button trigger modal_2 -->
+						<div class="date_selector"><button type="button" class="btn btn-info mb-2" data-toggle="modal" data-target="#custom_selection">Custom dates</button></div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Modal_2-->
+		
+		<div class="modal fade" id="custom_selection" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<form method="post" action="/balance/display" id="balance_modal_form">
+						<div class="modal-header">
+							<h5 class="modal-title" id="date_from">Date from</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+						</div>
+							<div class="modal-body">
+								<input type="date" name="start_date" id="date_from_picker" class="form-control datepicker" required>
+							</div>
+						<div class="modal-header">
+							<h5 class="modal-title" id="date_to">Date to</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"> </button>
+						</div>
+							<div class="modal-body">
+								<input type="date" name="end_date" id="date_to_picker" class="form-control datepicker" required>
+							</div>
+						<div class="modal-footer">
+							<button type="submit" name="dates_entry" class="btn btn-info">Save</button>
+							<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</main>
+	
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	
+{% endblock %}

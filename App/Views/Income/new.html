@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Add income{% endblock %}
+{% block footer %}
+	<script>
+			$(document).ready(function() {
+				/**
+				 * New income entry form validation 
+				 */
+				$('#income_form').validate({
+					rules: {
+					    amount_entry: {
+							required: true,
+							number: true,
+							min: 1
+						},
+						date_entry: {
+							required: true
+						}
+					},
+					messages: {
+					    amount_entry: {
+							required: "<div class='income_errors_remote'>Amount value must be entered</div>",
+							number: "<div class='income_errors_remote'>Amount entered must be a numeric value</div>",
+							min: "<div class='income_errors_remote'>Minimum amount is 1</div>"
+						},
+						date_entry: {
+							required: "<div class='income_errors_remote'>Date field is required</div>"
+						}
+					}
+				});
+			});
+	</script>
+{% endblock %}
+
+{% block body_user_signed_in %}
+
+	<main>	
+		<section>
+			<div class="container">
+				<div class="incomes_container">
+					<h4>Income details entry</h4>
+					
+						{% for error in income.errors %}
+							<div class="income_error">{{ error }}</div>
+						{% endfor %}
+						
+					<form method="post" action="/addincome/create" id="income_form">
+						<div class="form-group">
+							<label for="income_amount_input">Amount</label>
+							<input type="number" name="amount_entry" class="form-control form-control-sm" id="income_amount_input" placeholder="enter amount here" />
+						</div>
+						
+						<div class="form-group">
+							<label for="income_date_input">Date</label>
+							<input type="date" name="date_entry" class="form-control form-control-sm" id="income_date_input" />
+						</div>
+												  
+						<div class="form-group">
+							<label for="source_of_income_selection">Source of income</label>
+							<select name="income_source_entry" class="form-control form-control-sm" id="source_of_income_selection" />
+								{% for item in user_specific_categories %}
+									<option value={{item.id}}>{{item.name}}</option>
+								{% endfor %}
+							</select>
+						</div>
+									
+						<div class="form-group">
+							<label for="comments_field">Comments</label>
+							<textarea name="income_comment" class="form-control form-control-sm mt-2 mb-4" id="comments_field" rows="4"></textarea>
+						</div>
+						   
+						<button class="btn btn-color_custom ml-4 mr-5" type="submit">Confirm</button>
+						<button class="btn btn-warning" type="reset" onclick="window.location.href = '/addincome/new';">Cancel</button>
+						  
+					</form>
+				</div>
+			</div>
+		</section>
+	</main>
+	
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	
+{% endblock %}
