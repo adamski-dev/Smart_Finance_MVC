@@ -18,8 +18,8 @@ class Menu extends Authenticated
 		 *
 		 * @return void
 		 */
-		public function indexAction()
-		{
+		public function indexAction(){
+			
 			View::renderTemplate('Menu/index.html', [
 				'user' => $this -> user
 			]);

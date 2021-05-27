@@ -29,6 +29,32 @@ class Balances extends \Core\Model
 		};
     }
 
+	public static function get_default_income_balance_data(){
+	
+		$db = static::getDB();		
+		$stmt = $db -> prepare ('SELECT name, SUM(amount) AS sum_of_incomes FROM incomes, incomes_category_assigned_to_users WHERE incomes.user_id = :user_id AND date_of_income BETWEEN :start_date AND :end_date AND incomes.user_id = incomes_category_assigned_to_users.user_id AND incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id GROUP BY name ORDER BY sum_of_incomes DESC');
+		
+		$stmt -> bindValue(':user_id',    $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt -> bindValue(':start_date', date("Y-m-01"), PDO::PARAM_STR);
+		$stmt -> bindValue(':end_date',   date("Y-m-d"), PDO::PARAM_STR);
+		$stmt -> execute();
+		
+		return $stmt -> fetchAll();
+	}	
+	
+	public static function get_default_expense_balance_data(){
+		
+		$db = static::getDB();		
+		$stmt = $db -> prepare ('SELECT name, SUM(amount) AS sum_of_expenses FROM expenses, expenses_category_assigned_to_users WHERE expenses.user_id = :user_id AND date_of_expense BETWEEN :start_date AND :end_date AND expenses.user_id = expenses_category_assigned_to_users.user_id AND expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id GROUP BY name ORDER BY sum_of_expenses DESC');
+		
+		$stmt -> bindValue(':user_id',    $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt -> bindValue(':start_date', date("Y-m-01"), PDO::PARAM_STR);
+		$stmt -> bindValue(':end_date',   date("Y-m-d"), PDO::PARAM_STR);
+		$stmt -> execute();
+		
+		return $stmt -> fetchAll();
+	}
+	
 	public function get_income_balance_data(){
 	
 		$db = static::getDB();		
@@ -88,13 +114,19 @@ class Balances extends \Core\Model
 		}
 		
 		if((isset($this -> start_date)) && (isset($this -> end_date))){
+			
 			if(($this -> start_date < '2000-01-01') || ($this -> start_date > date('Y-m-d')) || 
 			   ($this -> end_date < '2000-01-01') || ($this -> end_date > date('Y-m-d'))){
 				   
 				$this -> errors[] = 'Dates entered must be between 01/01/2000 and today';
 				
 				return false;
+			} else if ($this -> start_date > $this -> end_date){
+				
+				$this -> errors[] = 'Date from must occur before Date to';
+				return false;
 			}
+			
 			return true;
 		}
 		return false;

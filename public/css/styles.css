@@ -75,7 +75,7 @@ body
 	background-color: #f0f0f0;
 	border-radius: 10px;
 	width: 80%;
-	min-height: 400px;
+	min-height: 350px;
 	padding: 50px;
 	margin-left: auto;
 	margin-right: auto;
@@ -577,8 +577,22 @@ button[type=button]
 	text-align: center;
 }
 
+.income_edit_error, 
+.expense_edit_error,
+.payment_edit_error,
+.user_edit_error
+{
+	color: red; 
+	font-size: 15px; 
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.signup_errors_remote,
 .income_errors_remote,
-.expense_errors_remote
+.expense_errors_remote,
+.payment_errors_remote,
+.user_edit_errors_remote
 {
 	margin-top: 3px;
 	color: red; 
@@ -609,3 +623,59 @@ button[type=button]
 	margin-bottom: 20px;
 }
 
+.setting_display_categories
+{
+	background-color: #dddddd;
+	width: auto -1px;
+	border: 1px solid #5bc0de;
+	border-radius: 13px;
+}
+
+#income_categories,
+#expense_categories,
+#payment_methods,
+#user_profile
+{
+	border-radius: 12px;
+}
+
+#incomes_display,
+#expenses_display,
+#payment_methods_display,
+#user_profile_display
+{
+	background-color: #dddddd;
+	width: auto;
+	font-weight: 400;
+	font-size: 14px;
+	display: none; 
+	margin-left: 5px; 
+	margin-right: 5px; 
+	border-radius: 13px;
+}
+
+h3.custom
+{
+	margin-top: 20px; 
+	margin-left: 15px; 
+	margin-bottom: 5px; 
+	text-align: left; 
+	font-size: 16px;
+}
+
+div.p-2
+{
+	padding-left: 0px !important;
+	padding-right: 5px !important;
+	padding-bottom: 4px !important;
+	font-size: 14px;
+}
+
+.no_result
+{
+	color: black; 
+	font-size: 15px; 
+	margin: 15px; 
+	text-align: center; 
+	font-weight: 600;
+}

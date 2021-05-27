@@ -33,7 +33,7 @@ class Mail
 		$mail->SMTPAuth = true;
 		$mail->IsHTML(true);
 		$mail->Username = "adamskipop@gmail.com";
-		$mail->Password = "email password here";
+		$mail->Password = "adamski19785%";
 		$mail->setFrom('adamskipop@gmail.com', 'Adam Pop');
 		$mail->AddAddress("$email");
 		$mail->Subject = "$title";

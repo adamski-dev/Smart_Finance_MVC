@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Settings{% endblock %}
+{% block footer %}
+	<script>
+		$(document).ready(function(){
+		
+			$($('#incomes_display').load("/Setting/editIncomes")).hide();
+			$($('#expenses_display').load("/Setting/editExpenses")).hide();
+			$($('#payment_methods_display').load("/Setting/editPayments")).hide();
+			$($("#user_profile_display").load('/Setting/editUser')).hide();
+				
+			$('#income_categories').click(function() {
+				$($('#incomes_display').load("/Setting/editIncomes")).slideToggle(500);					
+			});
+			
+			$('#expense_categories').click(function() {
+				$($('#expenses_display').load("/Setting/editExpenses")).slideToggle(500);					
+			});
+			
+			$('#payment_methods').click(function() {
+				$($('#payment_methods_display').load("/Setting/editPayments")).slideToggle(500);
+			});
+			
+			$("#user_profile").click(function(){
+				$($("#user_profile_display").load('/Setting/editUser')).slideToggle(500);
+			});
+			
+		});	
+	</script>
+{% endblock %}
+{% block body_user_signed_in %}
+
+	<main>
+		<section>
+			<div class="container">
+				<div class="raw">
+					<form>
+						<div class="balance_container">
+							<h4 style="margin-bottom: 30px; border-bottom-color: #17a2b8; padding: 5px 0;">Settings</h4>
+							{% for error in income_categories.errors %}
+								<div class="income_edit_error">{{ error }}</div>
+							{% endfor %}
+							{% for error in expense_categories.errors %}
+								<div class="expense_edit_error">{{ error }}</div>
+							{% endfor %}
+							{% for error in payment_methods.errors %}
+								<div class="payment_edit_error">{{ error }}</div>
+							{% endfor %}
+							{% for error in user.errors %}
+								<div class="user_edit_error">{{ error }}</div>
+							{% endfor %}
+							
+							<div class="setting_display_categories">
+								<button type="button" id="income_categories" class="btn btn-info btn-sm btn-block">
+								Income categories </button>
+								<div id="incomes_display"></div>
+							</div>
+							
+							<div class="setting_display_categories mt-2">
+								<button type="button" id="expense_categories" class="btn btn-info btn-sm btn-block">
+								Expense categories </button>
+								<div id="expenses_display"></div>
+							</div>
+							
+							<div class="setting_display_categories mt-2">
+								<button type="button" id="payment_methods" class="btn btn-info btn-sm btn-block">
+								Payment methods </button>
+								<div id="payment_methods_display"></div>
+							</div>
+							
+							<div class="setting_display_categories mt-2">
+								<button type="button" id="user_profile" class="btn btn-info btn-sm btn-block">
+								User profile </button>
+								<div id="user_profile_display"></div>
+							</div>
+							
+						</div>	
+					</form>
+				</div>
+			</div>
+		</section>
+	</main>
+	
+{% endblock %}

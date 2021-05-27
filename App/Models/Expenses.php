@@ -32,7 +32,7 @@ class Expenses extends \Core\Model
 	public static function get_user_specific_expense_categories(){
 
         $db = static::getDB();
-        $stmt = $db -> prepare('SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id = :id');
+        $stmt = $db -> prepare('SELECT id, name, monthly_limit FROM expenses_category_assigned_to_users WHERE user_id = :id');
         $stmt -> bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
 		$stmt -> execute();
 	
@@ -75,6 +75,11 @@ class Expenses extends \Core\Model
 			return false;
         }
 		
+		if ($this -> amount_entry <= 0){
+            $this -> errors[] = 'Amount value must be greater than 0';
+			return false;
+        }
+		
 		// date entry validation
 		if ($this -> date_entry == ''){
             $this -> errors[] = 'Date entry field is required';
@@ -86,4 +91,35 @@ class Expenses extends \Core\Model
 		  }
 		return true;
     }
+	
+	public static function get_selected_expense_category(){	
+	
+		$db = static::getDB();
+		
+		$stmt = $db -> prepare('SELECT * FROM expenses_category_assigned_to_users WHERE user_id = :user_id AND id = :expense_id');
+		
+		$stmt -> bindValue(':user_id',    $_SESSION['user_id'], PDO::PARAM_INT);
+		$stmt -> bindValue(':expense_id', $_POST['payment_reason'], PDO::PARAM_INT);
+		$stmt -> execute();	
+		$stmt -> setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+		
+		return $stmt -> fetch();
+	}
+	
+	public static function get_this_month_spent_by_category(){	
+			
+		$sql = "SELECT SUM(amount) as amount FROM expenses WHERE expense_category_assigned_to_user_id = :id AND date_of_expense BETWEEN DATE_FORMAT(NOW() ,'%Y-%m-01') AND NOW()";
+
+		$db = static::getDB();	
+		$stmt = $db -> prepare($sql);
+		
+		$stmt -> bindValue(':id', $_POST['payment_reason'], PDO::PARAM_INT);
+		$stmt -> execute();
+		
+		$result = $stmt -> fetch(PDO::FETCH_ASSOC);
+		
+		return $result['amount'];
+	}
+	
 }

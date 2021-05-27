@@ -1,0 +1,12 @@
+{% block title %}{% endblock %}
+
+{% block footer %}
+	
+	<script>
+			$(document).ready(function() {
+				$('#monthly_limit_present').html("You have a monthly limit of €{{category.monthly_limit}} set for category: {{category.name}}");
+			});
+	</script>
+{% endblock %}	
+{% block body %}
+{% endblock %}

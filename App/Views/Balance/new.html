@@ -3,6 +3,72 @@
 {% block footer %}
 
 	<script>
+		window.onload = function(){
+		
+			var chart1 = new CanvasJS.Chart("incomes_pie_chart", 
+				{
+					backgroundColor: "transparent",
+					animationEnabled: true, 
+					theme: "light1",
+					title: 
+					{
+						text: "incomes summary",
+						fontSize: 18,
+						fontWeight: "bold",
+						fontColor: "black",
+						fontFamily: "roboto",
+					},
+					data: [
+					{
+						type: "pie",
+						startAngle: 270,
+						yValueFormatString: "0.00\"\"",
+						indexLabel: "{label} {y}",
+						dataPoints: 
+						[
+							{% for item in default_income_balance_data %}
+								{y:{{ item.sum_of_incomes }}, label:'{{ item.name }}'},		
+							{% endfor %}
+						]
+					}]
+				});	
+		{% if default_income_balance_data is not empty %}
+			chart1.render();
+		{% endif %}
+		
+		var chart2 = new CanvasJS.Chart("expenses_pie_chart", 
+					{
+						backgroundColor: "transparent",
+						animationEnabled: true,
+						theme: "light1",					
+						title: 
+						{
+							text: "expenses summary",
+							fontSize: 18,
+							fontWeight: "bold",
+							fontColor: "black",
+							fontFamily: "roboto",
+						},
+						data: [
+						{
+							type: "pie",
+							startAngle: 117,
+							yValueFormatString: "0.00\"\"",
+							indexLabel: "{label} {y}",
+							dataPoints: 
+							[
+								{% for item in default_expense_balance_data %}
+									{y:{{ item.sum_of_expenses }}, label:'{{ item.name }}'},		
+								{% endfor %}
+							]
+						}]
+					});
+			
+			chart2.render();
+		}
+	</script>
+
+	<script>
 	// Data Picker Initialization
 	$('.datepicker').pickadate();
 	</script>
@@ -23,28 +89,71 @@
 							<button type="button" class="btn btn-info mb-2" data-toggle="modal" data-target="#dates_selection">
 							Select date range for summary
 							</button>
+								{% set total_income = 0 %}{% set total_expense = 0 %}
+								{% for item in default_income_balance_data %}  
+									{% set total_income = total_income + item.sum_of_incomes %}
+								{% endfor %}		
+								{% for item in default_expense_balance_data %}								
+									{% set total_expense = total_expense + item.sum_of_expenses %}
+								{% endfor %}
+								{% set balance = total_income - total_expense %}
+								{% if balance > 0 %}
+									<div class='balance_positive'>You have generated {{ balance }} euro of savings in the current month.</br> Well done !</div>
+								{% endif %}
+								{% if balance < 0 %}
+									<div class='balance_negative'>Your balance in the current month is {{ balance }} euro.</br> Try to watch your finances closely.</div>
+								{% endif %}
 							<div class="incomes_balance">
 								<h3>Incomes</h3>
 									<div id="incomes_column1">
 										<div class="first_line bg-info"> Category </div>
+											{% for item in default_income_balance_data %}
+												<div class="line">{{ item.name }}</div>
+											{% endfor %}							
 										<div class="last_line bg-info"> Total </div>
 									</div>
 									<div id="incomes_column2">
 										<div class="first_line bg-info"> Amount </div>
-										<div class="last_line bg-info">{{0}}</div>
+											{% for item in default_income_balance_data %}
+												<div class="line">{{ item.sum_of_incomes }}</div>
+											{% endfor %}
+										<div class="last_line bg-info">{{ total_income }}</div>
 									</div>		
+							</div>
+							<div class="incomes_balance_summary">
+								{% if total_income > 0 %}
+									<div><script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script></div>
+									<div id="incomes_pie_chart"></div>
+								{% else %}
+									<div class="no_result"> You have no incomes in the current month </div>
+								{% endif %}
 							</div>
 							<div class="expenses_balance">
 								<h3>Expenses</h3>
 									<div id="expenses_column1">
 										<div class="first_line bg-info"> Category </div>
+											{% for item in default_expense_balance_data %}
+												<div class="line">{{ item.name }}</div>
+											{% endfor %}
 										<div class="last_line bg-info"> Total </div>
 									</div>
 									<div id="expenses_column2">
 										<div class="first_line bg-info"> Amount </div>
-										<div class="last_line bg-info">{{0}}</div>
+											{% for item in default_expense_balance_data %}
+												<div class="line">{{ item.sum_of_expenses }}</div>
+											{% endfor %}
+										<div class="last_line bg-info">{{ total_expense }}</div>
 									</div>		
 							</div>
+							<div class="expenses_balance_summary">
+								{% if total_expense > 0 %}
+									<div><script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script></div>
+									<div id="expenses_pie_chart"></div>
+								{% else %}
+									<div class="no_result"> You have no expenses in the current month </div>
+								{% endif %}
+							</div>
+							
 						</div>	
 					</form>
 				</div>
@@ -97,8 +206,6 @@
 			</div>
 		</div>
 	</main>
-	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 	<script src="/js/bootstrap.min.js"></script>
-	
 {% endblock %}

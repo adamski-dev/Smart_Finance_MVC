@@ -18,12 +18,8 @@ class Home extends \Core\Controller
      *
      * @return void
      */
-    public function indexAction()
-    {
-        //$email = "adamskipop@gmail.com";
-		//$content = "to jest tresc";
-
-		//\App\Mail::send($email, $content); //wysylam automatycznie email test. 
+    public function indexAction(){
+        
 		View::renderTemplate('Home/index.html');
     }
 }

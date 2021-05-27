@@ -47,7 +47,8 @@ CREATE TABLE `expenses` (
 CREATE TABLE `expenses_category_assigned_to_users` (
   `id` int(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `user_id` int(11) UNSIGNED NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL
+  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `monthly_limit` decimal(8,2) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

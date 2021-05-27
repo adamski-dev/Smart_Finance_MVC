@@ -45,7 +45,7 @@ class Incomes extends \Core\Model
 			
 			$db = static::getDB();		
             
-			$stmt = $db -> prepare ('INSERT INTO incomes VALUES (NULL, :user_id, :income_category_assigned_to_user_id, :amount, 	:date_of_income, :income_comment)');
+			$stmt = $db -> prepare ('INSERT INTO incomes VALUES (NULL, :user_id, :income_category_assigned_to_user_id, :amount, :date_of_income, :income_comment)');
 
 			$stmt -> bindValue(':user_id',                             $_SESSION['user_id'], PDO::PARAM_INT);
 			$stmt -> bindValue(':income_category_assigned_to_user_id', $this -> income_source_entry, PDO::PARAM_INT);
@@ -63,6 +63,11 @@ class Incomes extends \Core\Model
 		// amount entry validation
 		if ($this -> amount_entry == ''){
             $this -> errors[] = 'Amount entry field is required';
+			return false;
+        }
+		
+		if ($this -> amount_entry <= 0){
+            $this -> errors[] = 'Amount value must be greater than 0';
 			return false;
         }
 		

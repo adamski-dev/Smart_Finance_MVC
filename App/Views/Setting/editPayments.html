@@ -1,0 +1,152 @@
+{% block title %}<h3 class="custom">Current payment methods:</h3>{% endblock %}
+{% block footer %}
+	<script>	
+		$('.modal-dialog').parent().on('show.bs.modal',function(e){$(e.relatedTarget.attributes['data-target'].value).appendTo('body');})
+	</script>
+	<script>
+		$(document).ready(function(){
+		
+			$(".edit_payments_modal_form").each(function(){
+				
+				$(this).find('#payment_method_id').val();
+				$(this).validate({
+					rules: {
+						payments_method_name: {
+							required: true,
+							rangelength: [3, 25],
+							remote: {
+								url: '/Setting/validate-PaymentMethodName'
+							}
+						}
+					},
+					messages: {
+						payments_method_name: {
+							required: "<div class='payment_errors_remote'>Payment method must be entered</div>",
+							rangelength: "<div class='payment_errors_remote'>Payment method must be between 3 and 25 characters</div>",
+							remote: "<div class='payment_errors_remote'>This payment method already exists - choose a different method</div>"
+						}
+					}
+				});
+			});
+			
+			$("#add_payment_method_modal_form").validate({
+				rules: {
+					payments_method_name: {
+						required: true,
+						rangelength: [3, 25],
+						remote: {
+							url: '/Setting/validate-PaymentMethodName'
+						}
+					}
+				},
+				messages: {
+					payments_method_name: {
+						required: "<div class='payment_errors_remote'>Payment method must be entered</div>",
+						rangelength: "<div class='payment_errors_remote'>Payment method must be between 3 and 25 characters</div>",
+						remote: "<div class='payment_errors_remote'>This payment method already exists - choose a different method</div>"
+					}
+				}
+			});
+		});		
+	</script>
+	
+{% endblock %}	
+{% block body %}
+	<main>
+	
+		<section>
+			<div class="container-fluid">
+				{% for item in user_payment_methods %}
+					<div class="d-flex" style="border-bottom: 1px solid #000;">
+						<div class="p-2 mr-auto mt-auto">{{item.name}}</div>
+						<div class="p-2">
+					
+						<!-- Button trigger modal_1 - edit payment method -->
+							<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_payments_method{{loop.index}}" ><span class="fa fa-pencil-square-o"></span></button>
+						</div>
+		
+						<!-- Modal_1 -->
+						<div class="modal fade" id="edit_payments_method{{loop.index}}" tabindex="-1" role="dialog">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<form method="post" action="/Setting/editPaymentsMethod" class="edit_payments_modal_form">
+										<div class="modal-header">
+											<h3 class="modal-title" id="edit_category">Edit payment method:</h3>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+										</div>
+											<div class="modal-body">
+												<input type = "" class="form-control" name="payments_method_name" id="payments_method_name"  value = "{{item.name}}"  require />
+											</div>
+											<input type="hidden" name="payment_method_id" id="payment_method_id" value="{{item.id}}"/>
+										<div class="modal-footer">
+											<button type="submit" name="edit_category" class="btn btn-info">Save</button>
+											<button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						
+						<!-- Button trigger modal_2 delete income category-->
+						<div class="p-2">
+							<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete_payment_method{{loop.index}}" data-backdrop="static"><span class="fa fa-trash-o"></span></button>
+						</div>
+						
+						<!-- Modal_2 -->
+						<div class="modal fade" id="delete_payment_method{{loop.index}}" tabindex="-1" role="dialog">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<form method="post" action="/Setting/deletePaymentMethod" id="delete_payment_method_modal_form">
+										<div class="modal-header">
+											<h3 class="modal-title ml-0" id="delete_category">Delete payment method:</h3>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+										</div>
+											<div class="modal-body">
+												<span style="font-size: 15px;">Please confirm delete of payment method: <span style="font-weight: bold;">{{item.name}}</span></span>
+												<input type="hidden" name="payment_method_id" value="{{item.id}}" class="form-control" />
+											</div>
+											
+										<div class="modal-footer">
+											<button type="submit" name="delete_category" class="btn btn-info">Confirm</button>
+											<button type="button" class="btn btn-warning" data-dismiss="modal" >Cancel</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>	
+				{% endfor %}
+					
+				<!-- Button trigger modal_3 add new paymet method -->
+				<div class="text-left mb-3 mt-3">
+					<button type="button" style="font-size: 14px;" class="btn btn-info btn-sm" data-toggle="modal" data-target="#add_new_payment_method"><i class="fa fa-plus"></i>      Add new category</button>
+				</div>
+				
+				<!-- Modal_3 -->
+				<div class="modal fade" id="add_new_payment_method" tabindex="-1" role="dialog">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<form method="post" action="/Setting/addNewPaymentMethod" id="add_payment_method_modal_form">
+								<div class="modal-header">
+									<h3 class="modal-title ml-0" id="add_new_category">Add new payment method:</h3>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+								</div>
+									<div class="modal-body">
+										<input type = "" class="form-control" name="payments_method_name" id="payments_method_name" placeholder="Payment method" require />
+									</div>
+								<div class="modal-footer">
+									<button type="submit" name="save_new_category" class="btn btn-info">Save</button>
+									<button type="button" class="btn btn-warning" data-dismiss="modal" >Cancel</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</section>
+	</main>
+	
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	
+{% endblock %}

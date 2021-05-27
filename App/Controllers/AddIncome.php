@@ -7,7 +7,7 @@ use \App\Models\Incomes;
 use \App\Flash;
 
 /**
- * AddIncome controller
+ * Addincome controller
  *
  * PHP version 7.0
  */
@@ -33,7 +33,7 @@ class Addincome extends Authenticated
      * @return void
      */
     public function newAction(){
-        View::renderTemplate('income/new.html', [
+        View::renderTemplate('Income/new.html', [
 			'user_specific_categories' => $this -> user_categories
         ]);
     }
@@ -45,10 +45,10 @@ class Addincome extends Authenticated
         if ($income -> add_new_income()){
 			
 			Flash::addMessage('New income added successfully');
-			$this -> redirect('/addincome/new');
+			$this -> redirect('/Addincome/new');
 
         } else {
-            View::renderTemplate('income/new.html', [
+            View::renderTemplate('Income/new.html', [
 				'income'                    => $income,
 				'user_specific_categories'  => $this -> user_categories
             ]);

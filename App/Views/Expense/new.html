@@ -1,34 +1,89 @@
 {% extends 'base.html' %}
 {% block title %}Add expense{% endblock %}
 {% block footer %}
+	
+	<script src="/js/todays_date.js"></script>
 	<script>
-			$(document).ready(function() {
-				/**
-				 * New expense entry form validation 
-				 */
-				$('#expense_form').validate({
-					rules: {
-					    amount_entry: {
-							required: true,
-							number: true,
-							min: 1
-						},
-						date_entry: {
-							required: true
-						}
+		$(document).ready(function() {
+			/**
+			 * New expense entry form validation 
+			 */
+			$('#expense_form').validate({
+				rules: {
+					amount_entry: {
+						required: true,
+						number: true,
+						min: 1
 					},
-					messages: {
-					    amount_entry: {
-							required: "<div class='expense_errors_remote'>Amount value must be entered</div>",
-							number: "<div class='expense_errors_remote'>Amount entered must be a numeric value</div>",
-							min: "<div class='expense_errors_remote'>Minimum amount is 1</div>"
-						},
-						date_entry: {
-							required: "<div class='expense_errors_remote'>Date field is required </div>"
-						}
+					date_entry: {
+						required: true,
+						min: '2000-01-01',
+						max: todays_date()
 					}
-				});
+				},
+				messages: {
+					amount_entry: {
+						required: "<div class='expense_errors_remote'>Amount value must be entered</div>",
+						number: "<div class='expense_errors_remote'>Amount entered must be a numeric value</div>",
+						min: "<div class='expense_errors_remote'>Minimum amount is 1</div>"
+					},
+					date_entry: {
+						required: "<div class='expense_errors_remote'>Date field is required </div>",
+						min: "<div class='income_errors_remote'>Enter date greater than 01/01/2000 </div>",
+						max: "<div class='income_errors_remote'>Enter date between 01/01/2000 and today</div>"
+					}
+				}
 			});
+			
+			/**
+			 * Verification if monthly limit is set for selected category - combines checks: on page load and on input selector change 
+			 */
+			$("#payment_reason_selection").on("change rightnow", function() {
+			
+					$.post("/Addexpense/checkLimit", {
+						payment_reason: $('#payment_reason_selection').val()
+					}, function(data){
+						$("#monthly_limit_present").html(data);
+					});
+			}).triggerHandler("rightnow");
+				
+
+            /**
+			 * Verification of expense amount entered that it is within monthly limit set for a given category if monthly limit is set. 
+			 */				
+			$('#expense_amount_input').on("keyup keydown",function(){   
+			   
+			   var amount = $(this).val();
+			   $.ajax({  
+					url:"/Addexpense/showLimit",  
+					method:"POST",  
+					data:{
+						payment_reason: $('#payment_reason_selection').val(),
+						amount_entry: amount
+					},  
+					success:function(data){  
+						 $('#show_limits').html(data);  
+					}  
+			   });  
+			});
+			
+			$('#payment_reason_selection').change(function(){   
+			   
+			   var payment_reason = $(this).val();
+			   $.ajax({  
+					url:"/Addexpense/showLimit",  
+					method:"POST",  
+					data:{
+						payment_reason: payment_reason,
+						amount_entry: $('#expense_amount_input').val()
+					},  
+					success:function(data){  
+						 $('#show_limits').html(data);  
+					}  
+			   });  
+			});
+			
+		});
 	</script>
 {% endblock %}
 {% block body_user_signed_in %}
@@ -41,11 +96,16 @@
 						{% for error in expense.errors %}
 							<div class="expense_error">{{ error }}</div>
 						{% endfor %}
+						
+					<div class="text-center mb-2" style="font-size: 14px; font-weight: bold; " id="monthly_limit_present"></div>
+					
 					<form method="post" action="/addexpense/create" id="expense_form">
 						<div class="form-group">
 							<label for="expense_amount_input">Amount</label>
 							<input type="number" name="amount_entry" class="form-control form-control-sm" id="expense_amount_input" placeholder="enter amount here" />
+							<div class="text-left mt-2" style="font-weight: normal; font-size: 14px;" id="show_limits"></div>
 						</div>
+						
 						<div class="form-group">
 							<label for="expense_date_input">Date</label>
 							<input type="date" name="date_entry" class="form-control form-control-sm" id="expense_date_input" />
@@ -77,8 +137,8 @@
 			</div>
 		</section>
 	</main>
-	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 	<script src="/js/bootstrap.min.js"></script>
 	
 {% endblock %}

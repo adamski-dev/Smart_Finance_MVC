@@ -1,0 +1,158 @@
+{% block title %}<h3 class="custom mb-2">Profile data:</h3>{% endblock %}
+{% block footer %}
+	<script>	
+		$('.modal-dialog').parent().on('show.bs.modal',function(e){$(e.relatedTarget.attributes['data-target'].value).appendTo('body');})
+	</script>
+	
+	<script src="/js/hideShowPassword.min.js"></script>
+	
+	<script>
+	
+		$(document).ready(function(){
+		
+			jQuery.validator.addMethod('validPassword', function(value, element) {
+					if (value != '') {
+						if (value.match(/.*[a-z]+.*/i) == null) { 
+							return false;
+						}
+						if (value.match(/.*\d+.*/i) == null) {
+							return false;
+						}
+					}
+					return true;
+				},
+			);
+			
+			var userId = '{{ user.id }}';
+			/**
+			 *	Validate the form
+			 */
+			
+			$('#edit_user_modal').validate({
+					rules: {
+					    name: {
+							required: true,
+							rangelength: [3, 25]
+						},
+						email: {
+							required: true,
+							email: true,
+							remote: {
+								url: '/Account/validate-email',
+								data: {
+									ignore_id: function(){
+										return userId;
+									}
+								}
+							}
+						},
+						password: {
+							rangelength: [7, 25], 
+							validPassword: true
+						},
+					},
+					messages: {
+					    name: {
+							required: "<div class ='user_edit_errors_remote'>Name field is required </div>",
+							rangelength: "<div class ='user_edit_errors_remote'>Name must contain between 3 to 25 characters </div>"
+						},
+						email: {
+							required: "<div class ='user_edit_errors_remote'>Email field is required </div>",
+							email: "<div class ='user_edit_errors_remote'>Enter valid email address </div>",
+							remote: "<div class ='user_edit_errors_remote'>Email address already taken </div>"
+						},
+						password: {
+							rangelength: "<div class ='user_edit_errors_remote'>Password must contain 7 to 25 characters </div>",
+							validPassword: "<div class ='user_edit_errors_remote'>Must contain at least 1 letter and number</div>"
+						},
+					}
+				});
+			
+			/**
+			 * Show password toggle button
+			 *
+			 */
+			$('#inputPassword').hideShowPassword({
+				show: false,
+				innerToggle: 'focus',
+				toggle: {
+						verticalAlign: 'top',
+						styles: { 'margin-top': '10px' , 'border': '1px solid #00aaa2', 'border-radius': '4px', 'margin-right': '5px'}
+				}
+			});
+			
+			$('#cancel_event').click(function (){
+				setTimeout(function () {
+					location.reload(true);
+				}, 100);
+			});
+			
+		});
+	</script>
+	
+{% endblock %}	
+{% block body %}
+	<main>
+	
+		<section>
+		
+			<div class="container-fluid">
+				{% if user is not empty %}
+					<div class="d-flex" style="border-bottom: 1px solid #000;">
+						<div class="p-2 mr-auto mt-auto font-weight-bold">Name</div>
+						<div class="p-2 mr-auto mt-auto">{{user.name}}</div>
+					</div>	
+					
+					<div class="d-flex" style="border-bottom: 1px solid #000;">
+						<div class="p-2 mr-auto mt-auto font-weight-bold">Email address</div>
+						<div class="p-2 mr-auto mt-auto">{{user.email}}</div>
+					</div>
+				{% endif %}
+					
+				<!-- Button trigger modal_1 edit user data-->
+				<div class="text-left mb-3 mt-3">
+					<button type="button" style="font-size: 14px;" class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit_user_data" aria-hidden="true" data-backdrop="static"><i class="fa fa-pencil-square-o"></i>      Edit user data</button>
+				</div>
+				
+				<!-- Modal_1 -->
+				<div class="modal fade" id="edit_user_data" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<form method="post" action="/Setting/editProfile" id="edit_user_modal">
+								<div class="modal-header">
+									<h3 class="modal-title ml-0" id="user_data">Edit user data:</h3>
+								</div>
+									<div class="modal-body">
+										<div class="form-group">
+											<label for="inputName">Name</label>
+											<input id="inputName" name="name" placeholder="Name" value="{{ user.name }}" required class="form-control" />
+										</div>		
+										<div class="form-group">
+											<label for="inputEmail">Email address</label>
+											<input id="inputEmail" name="email" placeholder="email address" value="{{ user.email }}" required type="" class="form-control"/>
+										</div>		
+										<div class="form-group">
+											<label for="inputPassword">Password</label>
+											<input style="border-radius: 4px; border: 1px solid #00aaa2; font-family: lock;" class="form-control" id="inputPassword" name="password" placeholder="&#xe804; Password" aria-describedby="helpBlock" />
+											<span id="helpBlock" class="help-block">Leave blank to keep current password</span>
+										
+										<!-- pattern ="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" title ="Minimum 6 chars, at least one letter and number."   
+										validation of password pattern:at least 1 number, at least 1 letter and a minimum of 6 characters --> 
+										</div>
+									</div>
+								<div class="modal-footer">
+									<button type="submit" name="save_new_category" class="btn btn-info">Save</button>
+									<button type="button" class="btn btn-warning" data-dismiss="modal" id="cancel_event" >Cancel</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</section>
+	</main>
+	
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	
+{% endblock %}

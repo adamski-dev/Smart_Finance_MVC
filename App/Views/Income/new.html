@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Add income{% endblock %}
 {% block footer %}
+
+	<script src="/js/todays_date.js"></script>
 	<script>
 			$(document).ready(function() {
 				/**
@@ -14,7 +16,9 @@
 							min: 1
 						},
 						date_entry: {
-							required: true
+							required: true,
+							min: '2000-01-01',
+							max: todays_date()
 						}
 					},
 					messages: {
@@ -24,14 +28,15 @@
 							min: "<div class='income_errors_remote'>Minimum amount is 1</div>"
 						},
 						date_entry: {
-							required: "<div class='income_errors_remote'>Date field is required</div>"
+							required: "<div class='income_errors_remote'>Date field is required</div>",
+							min: "<div class='income_errors_remote'>Enter date greater than 01/01/2000 </div>",
+							max: "<div class='income_errors_remote'>Enter date between 01/01/2000 and today</div>"
 						}
 					}
 				});
 			});
 	</script>
 {% endblock %}
-
 {% block body_user_signed_in %}
 
 	<main>	
@@ -78,7 +83,7 @@
 		</section>
 	</main>
 	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 	<script src="/js/bootstrap.min.js"></script>
 	
 {% endblock %}

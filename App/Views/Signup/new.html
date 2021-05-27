@@ -26,7 +26,8 @@
 			$('#formSignup').validate({
 					rules: {
 					    name: {
-							required: true
+							required: true,
+							rangelength: [3, 25]
 						},
 						email: {
 							required: true,
@@ -42,18 +43,19 @@
 					},
 					messages: {
 					    name: {
-							required: "<div style ='color: red; font-size: 14px; text-align: center;'>name field is required </div>"
+							required: "<div class='signup_errors_remote'>name field is required </div>",
+							rangelength: "<div class='signup_errors_remote'>name should contain between 3 and 25 characters</div>"
 						},
 						email: {
-							required: "<div style ='color: red; font-size: 14px; margin: 5px; text-align: center;'>email field is required </div>",
-							email: "<div style ='color: red; font-size: 14px; text-align: center;'>enter valid email address </div>",
-							remote: "<div style ='color: red; font-size: 15px; text-align: center;'>email address already taken </div>"
+							required: "<div class='signup_errors_remote'>email field is required </div>",
+							email: "<div class='signup_errors_remote'>enter valid email address </div>",
+							remote: "<div class='signup_errors_remote'>email address already taken </div>"
 						},
 						password: {
-							required: "<div style ='color: red; font-size: 15px; margin: 5px; text-align: center;'>password field is required </div>",
-							minlength: "<div style ='color: red; font-size: 15px; margin: 5px; text-align: center;'>password must contain 7 to 25 characters </div>",
-							maxlength: "<div style ='color: red; font-size: 15px; margin: 5px; text-align: center;'>password must contain 7 to 25 characters </div>",
-							validPassword: "<div style ='color: red; font-size: 15px; margin: 5px; text-align: center;'>must contain 1 letter and 1 number</div>"
+							required: "<div class='signup_errors_remote'>password field is required </div>",
+							minlength: "<div class='signup_errors_remote''>password must contain 7 to 25 characters </div>",
+							maxlength: "<div class='signup_errors_remote'>password must contain 7 to 25 characters </div>",
+							validPassword: "<div class='signup_errors_remote'>must contain 1 letter and 1 number </div>"
 						},
 					}
 				});

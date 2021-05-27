@@ -39,9 +39,7 @@ class View
      *
      * @return void
      */
-    public static function renderTemplate($template, $args = []) //oryginalna renderTemplate funkcja posluzyla jako funkcja ponizsza getTemplate.
-																 // na koncu niej bylo echo $twig->render ($template, $args) teraz jest echo static:: wywolanie...
-    {
+    public static function renderTemplate($template, $args = []){
 		echo static::getTemplate($template, $args);
     }
 	
@@ -53,25 +51,15 @@ class View
      *
      * @return void
      */
-    public static function getTemplate($template, $args = [])
-    {
+    public static function getTemplate($template, $args = []){
         static $twig = null;
 
-        if ($twig === null) {
+        if ($twig === null){
 			
-            //$loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . '/App/Views');
-            $loader = new \Twig\Loader\FilesystemLoader('../App/Views'); // ten zapis dziala dobrze
-            //$loader = new \Twig_Loader_Filesystem('../App/Views');  ten zapis nie dziala mi z lekcji
+            $loader = new \Twig\Loader\FilesystemLoader('../App/Views');
             $twig = new \Twig\Environment($loader);
-            //$twig = new \Twig_Environment($loader);  ten zapis nie dziala mi z lekcji
-			
-			//$twig -> addGlobal('session', $_SESSION); // adding Twig tamplates as global variable so that we can use twig methods globally within $_SESSION parameters...
-			
-			//$twig -> addGlobal('is_logged_in', \App\Auth::isLoggedIn()); // adding is user logged in information to twig template and removing above addGlobal for session
-			
-			$twig -> addGlobal('current_user', \App\Auth::getUser());  // with addition of this variable we can remove is_logged_in as we will use this instead
-			
-			$twig -> addGlobal('flash_messages', \App\Flash::getMessages()); // adding flash messages to twig
+			$twig -> addGlobal('current_user', \App\Auth::getUser());
+			$twig -> addGlobal('flash_messages', \App\Flash::getMessages());
         }
 
         return $twig->render($template, $args);

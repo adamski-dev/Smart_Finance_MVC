@@ -88,7 +88,7 @@ class User extends \Core\Model
 			if($stmt = $db -> prepare ('SELECT * FROM expenses_category_default')){
 				$stmt -> execute();
 				while ($db_data_row = $stmt -> fetch()){
-					$user_query = $db -> prepare ('INSERT INTO expenses_category_assigned_to_users VALUES (NULL, :user_id, :name)');
+					$user_query = $db -> prepare ('INSERT INTO expenses_category_assigned_to_users VALUES (NULL, :user_id, :name, NULL)');
 					$user_query -> bindValue(':user_id', $user -> id, PDO::PARAM_INT);
 					$user_query -> bindValue(':name', $db_data_row['name'], PDO::PARAM_STR);
 					$user_query -> execute();
@@ -120,6 +120,11 @@ class User extends \Core\Model
 		if($this -> name == ''){
 			$this -> errors[] = 'Name is required';
 		}
+		
+		if (((strlen($this -> name) < 3) || (strlen($this -> name) > 25))&&(!$this -> name == '')){
+			
+			$this -> errors[] = 'Name must be between 3 and 25 characters.';
+        }
 		
 		// Email address
 		if(filter_var($this -> email, FILTER_VALIDATE_EMAIL) === false){
