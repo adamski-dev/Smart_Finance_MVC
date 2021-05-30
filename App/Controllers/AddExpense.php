@@ -59,37 +59,35 @@ class AddExpense extends Authenticated
 	
 	public function checkLimitAction(){
 		
-		$this -> category = Expenses::get_selected_expense_category();
+		$category = Expenses::get_selected_expense_category();
 		
-		if ($this -> category -> monthly_limit){
+		if ($category -> monthly_limit){
 			
 			View::renderTemplate('Expense/show_monthly_limit.html', [
-				'category' => $this -> category		
+				'category' => $category		
 			]);		
 		}	
     }
 	
-	public function showLimitAction(){
+		public function showLimitAction(){
 		
-		$this -> category = Expenses::get_selected_expense_category();
-		$monthly_limit = $this -> category -> monthly_limit;
+		$category = Expenses::get_selected_expense_category();
+		$monthly_limit = $category -> monthly_limit;
 		
 		if ($monthly_limit){
 			
-			$this -> amount_spent = Expenses::get_this_month_spent_by_category();
-			$this -> balance =           $monthly_limit - $this -> amount_spent;
-			$this -> amount =            $_POST['amount_entry'];
-			$this -> remaining_balance = $this -> balance - $this -> amount;
+			$amount_spent = Expenses::get_this_month_spent_by_category();
+			$balance = $monthly_limit - $amount_spent;
+			$actual_amount_data = $_POST['amount_entry'];
+			$remaining_balance = $balance - $actual_amount_data;
 			
-			if ($this -> remaining_balance > 0){
-				
-				$remains = $this -> remaining_balance;
-				echo "<div style='color: #009933;'>You can spend: €".$remains." before monthly limit is exceeded</div>";
+			if ($remaining_balance > 0){
+		
+				echo "<div style='color: #009933;'>You can spend: €".$remaining_balance." before monthly limit is exceeded</div>";
 			
-			} else if ($this -> remaining_balance < 0){
-				
-				$remains = -($this -> remaining_balance);
-				echo "<div style='color: red;'>You have exceeded your monthly limit by: €".$remains."</div>";
+			} else if ($remaining_balance < 0){
+			
+				echo "<div style='color: red;'>You have exceeded your monthly limit by: €" .- $remaining_balance."</div>";
 				
 			} else echo "<div style='color: #009933;'>Your expenses are equal to your monthly limit</div>";
 		}	
