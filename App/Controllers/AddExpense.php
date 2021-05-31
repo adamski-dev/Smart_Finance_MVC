@@ -69,17 +69,13 @@ class AddExpense extends Authenticated
 		}	
     }
 	
-		public function showLimitAction(){
+	public function showLimitAction(){
 		
-		$category = Expenses::get_selected_expense_category();
-		$monthly_limit = $category -> monthly_limit;
+		$monthly_limit = Expenses::get_selected_expense_category() -> monthly_limit;
 		
 		if ($monthly_limit){
 			
-			$amount_spent = Expenses::get_this_month_spent_by_category();
-			$balance = $monthly_limit - $amount_spent;
-			$actual_amount_data = $_POST['amount_entry'];
-			$remaining_balance = $balance - $actual_amount_data;
+			$remaining_balance = ($monthly_limit - Expenses::get_this_month_spent_by_category()) - $_POST['amount_entry'];
 			
 			if ($remaining_balance > 0){
 		
